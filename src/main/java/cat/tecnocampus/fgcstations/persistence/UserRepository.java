@@ -1,5 +1,6 @@
 package cat.tecnocampus.fgcstations.persistence;
 
+import cat.tecnocampus.fgcstations.application.DTOs.UserDTO;
 import cat.tecnocampus.fgcstations.application.DTOs.UserDTOInterface;
 import cat.tecnocampus.fgcstations.application.DTOs.UserDTOnoFJ;
 import cat.tecnocampus.fgcstations.application.DTOs.UserTopFavoriteJourney;
@@ -11,4 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
+
+    Optional <User> findbyName (String username);
+
+    Optional<UserDTOnoFJ> findUsernoFJ(String username);
+
+    Optional <UserDTOInterface>findUserInterfacebyName(String username);
+
+    @Query ("SELECT u FROM User u")
+    List <User> getAllUsers ();
+
+    @Query ("SELECT u FROM User u" +
+            "WHERE ")
 }

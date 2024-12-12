@@ -10,4 +10,8 @@ public interface FavoriteJourneyRepository extends JpaRepository<FavoriteJourney
 
     //TODO optional: Try to implement the query to get the FavoriteJourneysDTO of a user with its list of DayTimeStartDTO.
     // Is it possible to do it with a single query?
+
+    List <FavoriteJourney>findByUser (User user);
+
+
 }
