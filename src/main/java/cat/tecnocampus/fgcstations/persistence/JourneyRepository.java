@@ -1,6 +1,7 @@
 package cat.tecnocampus.fgcstations.persistence;
 
 import cat.tecnocampus.fgcstations.application.DTOs.JourneyDTO;
+import cat.tecnocampus.fgcstations.application.DTOs.UserTopFavoriteJourney;
 import cat.tecnocampus.fgcstations.domain.Journey;
 import cat.tecnocampus.fgcstations.domain.JourneyId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,7 @@ public interface JourneyRepository extends JpaRepository<Journey, JourneyId> {
 
     Optional <Journey> findJourneyBy (String origin,String destination);
     Optional <JourneyId> findJourneyId (String origin, String destination);
+
+
 
 }

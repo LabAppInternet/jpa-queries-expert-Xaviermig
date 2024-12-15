@@ -22,6 +22,14 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query ("SELECT u FROM User u")
     List <User> getAllUsers ();
 
-    @Query ("SELECT u FROM User u" +
-            "WHERE ")
+    @Query ("SELECT u.username, u.name, u.secondName, COUNT (f) AS numberOfFavoriteJourneys " +
+            "FROM FavoriteJourney f  " +
+            "JOIN f.user u " +
+            "GROUP BY  u.username,u.name, u.secondName " +
+            "ORDER BY COUNT(f) DESC")
+    List <UserTopFavoriteJourney> findTop3UsersWithMostJourneys();
+
+
+
+
 }
