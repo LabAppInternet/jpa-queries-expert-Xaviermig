@@ -10,6 +10,7 @@ import cat.tecnocampus.fgcstations.persistence.DayTimeStartRepository;
 import cat.tecnocampus.fgcstations.persistence.FavoriteJourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.JourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +28,15 @@ public class FcgUserService {
     private final JourneyRepository journeyRepository;
     private final DayTimeStartRepository dayTimeStartRepository;
     private final FgcStationService fgcStationService;
+    private final ModelMapper modelMapper;
 
-
-
-
-
-    public FcgUserService(UserRepository userRepository, FavoriteJourneyRepository favoriteJourneyRepository, JourneyRepository journeyRepository, DayTimeStartRepository dayTimeStartRepository, FgcStationService fgcStationService) {
+    public FcgUserService(UserRepository userRepository, FavoriteJourneyRepository favoriteJourneyRepository, JourneyRepository journeyRepository, DayTimeStartRepository dayTimeStartRepository, FgcStationService fgcStationService, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.favoriteJourneyRepository = favoriteJourneyRepository;
         this.journeyRepository = journeyRepository;
         this.dayTimeStartRepository = dayTimeStartRepository;
         this.fgcStationService = fgcStationService;
+        this.modelMapper = modelMapper;
     }
 
     public UserDTO getUserDTO(String username) {
@@ -56,7 +55,7 @@ public class FcgUserService {
         // TODO 10.1: get the user (domain) given her username. If the user does not exist, throw a UserDoesNotExistsException
         //  You can solve this exercise without leaving this file
 
-        return userRepository.findbyName(username)
+        return userRepository.findByName(username)
                 .orElseThrow(()-> new UserDoesNotExistsException(username));
     }
 
@@ -64,15 +63,16 @@ public class FcgUserService {
     public UserDTOnoFJ getUserDTOWithNoFavoriteJourneys(String username) {
         // TODO 12: get the user (UserDTOnoFJ) given her username. If the user does not exist, throw a UserDoesNotExistsException
 
-        return userRepository.findUsernoFJ(username)
-                .orElseThrow(()->new UserDoesNotExistsException(username));
+        User user = getDomainUser(username);
+        if(favoriteJourneyRepository.existsFavoriteJourneyByUser(user)) return null;
+        return modelMapper.map(user, UserDTOnoFJ.class);
     }
-
     public UserDTOInterface getUserDTOInterface(String username) {
         // TODO 13: get the user (UserDTOInterface) given her username. If the user does not exist, throw a UserDoesNotExistsException
 
-        return userRepository.findUserInterfacebyName(username)
-                .orElseThrow(()->new UserDoesNotExistsException(username));
+        User user = getDomainUser(username);
+        return modelMapper.map(user, UserDTOInterface.class);
+
     }
 
     public List<UserDTO> getUsers() {

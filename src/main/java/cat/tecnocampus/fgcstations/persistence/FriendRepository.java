@@ -23,12 +23,9 @@ List<Friend> findByUserName(String userName);
         "ORDER BY  COUNT(f) DESC")
     List <UserTopFriend> findTop3UsersWithMostFriends();
 
-@Query ("SELECT DISTINCT u " +
-        "FROM Friend f " +
-        "JOIN f.user u " +
-        "WHERE f.id.friend = :friendName")
-    List <FriendUserDTO>getFriendbyName(@Param("friendName") String friendname);
-
+    @Query("SELECT f.user.username AS userUsername, f.user.name AS userName " +
+            "FROM Friend f WHERE f.id.friend = :friendName")
+    List <FriendUserDTO>findUsersByFriendName(String friendName);
 
     /*@Query ("SELECT u.username, u.name, u.secondName, COUNT (f) AS numberOfFavoriteJourneys " +
             "FROM FavoriteJourney f  " +

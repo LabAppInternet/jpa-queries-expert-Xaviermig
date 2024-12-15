@@ -12,6 +12,6 @@ public interface FavoriteJourneyRepository extends JpaRepository<FavoriteJourney
     // Is it possible to do it with a single query?
 
     List <FavoriteJourney>findByUser (User user);
-
+    boolean existsFavoriteJourneyByUser(User user);
 
 }

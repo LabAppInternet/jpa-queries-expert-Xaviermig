@@ -9,6 +9,7 @@ import cat.tecnocampus.fgcstations.domain.Friend;
 import cat.tecnocampus.fgcstations.domain.User;
 import cat.tecnocampus.fgcstations.persistence.FriendRepository;
 import cat.tecnocampus.fgcstations.persistence.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ public class FgcFriendService {
     private final FriendRepository friendRepository;
     private final FcgUserService fcgUserService;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public FgcFriendService(FriendRepository friendRepository, FcgUserService fcgUserService, UserRepository userRepository) {
+    public FgcFriendService(FriendRepository friendRepository, FcgUserService fcgUserService, UserRepository userRepository, ModelMapper modelMapper) {
         this.friendRepository = friendRepository;
         this.fcgUserService = fcgUserService;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     public UserFriendsDTO getUserFriends(String username) {
@@ -34,17 +37,12 @@ public class FgcFriendService {
         // TODO 20: find all the friends of a user given her username. You can solve this exercise without any sql query
         //List<Friend> friends = new ArrayList<>(); //feed the list with the friends of the user
         List <Friend> allFriends = friendRepository.findAll();
-        List <String> friendsOfUser = allFriends.stream()
-                .filter(friend -> friend.getUsername().equalsIgnoreCase(username))
-                .map (Friend ::getFriend)
+        List <Friend> friendsOfUser = allFriends.stream()
+                .filter(friend -> friend.getUsername().equals(username))
                 .toList();
 
-        UserFriendsDTO friendsDTO = new UserFriendsDTO();
-        friendsDTO.setUsername(username);
-        friendsDTO.setFriends(friendsOfUser);
-        return friendsDTO;
 
-        //return MapperHelper.listOfAUserFriendsToUserFriendsDTO(friends);
+        return MapperHelper.listOfAUserFriendsToUserFriendsDTO(friendsOfUser);
     }
 
     public List<UserFriendsDTO> getAllUserFriends() {
@@ -84,7 +82,7 @@ public class FgcFriendService {
     // Find all users whose friends have a certain name
     public List<FriendUserDTO> getUsersByFriend(String friendName) {
         // TODO 23: find all users whose friends have a certain name.
-        return friendRepository.getFriendbyName(friendName);
+        return friendRepository.findUsersByFriendName(friendName);
     }
 
 }

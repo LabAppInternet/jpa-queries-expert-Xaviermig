@@ -6,6 +6,7 @@ import cat.tecnocampus.fgcstations.application.exception.StationDoesNotExistsExc
 import cat.tecnocampus.fgcstations.application.mapper.MapperHelper;
 import cat.tecnocampus.fgcstations.domain.Station;
 import cat.tecnocampus.fgcstations.persistence.StationRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +14,10 @@ import java.util.List;
 @Service
 public class FgcStationService {
     private final StationRepository stationRepository;
-
-    public FgcStationService(StationRepository stationRepository) {
+    private final ModelMapper modelMapper;
+    public FgcStationService(StationRepository stationRepository, ModelMapper modelMapper) {
         this.stationRepository = stationRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<StationDTO> getStationsDTO() {
@@ -42,8 +44,9 @@ public class FgcStationService {
 
     public StationDTO getStationDTO(String name) {
         // TODO 4: get a station by name (see the returned type). If the station does not exist, throw a StationDoesNotExistsException
-        return stationRepository.findByDtoName(name)
+        Station station = stationRepository.findByName(name)
                 .orElseThrow(()-> new StationDoesNotExistsException(name));
+        return modelMapper.map(station, StationDTO.class);
     }
 
     public List<StationTopFavoriteJourney> getStationsOrderedByFavoriteJourneysAsEitherOriginOrDestination() {

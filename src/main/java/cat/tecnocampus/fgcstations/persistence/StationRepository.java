@@ -18,6 +18,5 @@ public interface StationRepository extends JpaRepository<Station, String> {
     List <Station> findAllDomainStations();
 
    Optional <Station> findByName (String name);
-   Optional <StationDTO> findByDtoName(String name);
 
 }

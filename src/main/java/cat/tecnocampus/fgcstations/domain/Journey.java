@@ -61,4 +61,12 @@ public class Journey {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public JourneyId getId() {
+        return id;
+    }
+
 }
+
+
+
